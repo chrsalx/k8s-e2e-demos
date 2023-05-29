@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: nginx-server
+  namespace: argocd
+  labels:
+    app: nginx-ingress
+spec:
+  project: default
+  source:
+    chart: nginx
+    repoURL: https://charts.bitnami.com/bitnami
+    targetRevision: 14.1.0
+    helm:
+      releaseName: nginx-server
+      parameters:
+        - name: "service.type"
+          value: "ClusterIP"
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: nginx
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: false
